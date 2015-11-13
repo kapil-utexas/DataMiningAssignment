@@ -1,4 +1,4 @@
-library(recommenderlab)
+#library(recommenderlab)
 library(ridge)
 
 data = read.csv('train.csv',header=TRUE,sep=",")
@@ -10,15 +10,26 @@ data$SchoolHoliday = as.numeric(factor(data$SchoolHoliday))
 data$Date = as.numeric(factor(data$Date))
 #print(Date) 
 #Z score normlization
-normData = scale(data[,-4], center = TRUE, scale = TRUE)
+normData = scale(data, center = TRUE, scale = TRUE)
 sdVal = apply(normData,2,sd)
 #meanVal = apply(normData,2,mean)
 print(sdVal)
 #print (meanVal)
 #linearRidge(formula, data, lambda = "automatic", nPCs = NULL,scaling = c("corrForm", "scale", "none"), ...)
 
-model = linearRidge(data$Sales[1,2] ~ normData[1,2])
-summary(model)
+pcaData = prcomp(normData[,-4],
+                 center = TRUE,
+                 scale. = TRUE)
+print(pcaData)
 
+
+
+
+dat = cbind(data.frame(Y=normData[1:5,4]),as.data.frame(normData[1:5,-4]))
+model = linearRidge( Y  ~ .  ,data =  dat , nPCs = 8) 
+                     
+
+#summ = summary(model)
+#print(summ)
 
                               
